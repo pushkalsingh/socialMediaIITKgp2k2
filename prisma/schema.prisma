@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  people Person[] @relation("AddedBy")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String
+  icon        String? // single emoji shown next to the category name
+  createdAt   DateTime @default(now())
+
+  people Person[]
+}
+
+model Person {
+  id         String   @id @default(cuid())
+  name       String
+  slug       String   @unique
+  bio        String
+  avatarUrl  String?
+  verified   Boolean  @default(false) // has an admin double-checked the links are live?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  addedById String?
+  addedBy   Admin?  @relation("AddedBy", fields: [addedById], references: [id], onDelete: SetNull)
+
+  youtubeUrl   String?
+  instagramUrl String?
+  facebookUrl  String?
+  xUrl         String?
+  tiktokUrl    String?
+  websiteUrl   String?
+
+  @@index([categoryId])
+}
