@@ -36,7 +36,7 @@ export default async function AdminCategoriesPage() {
             <div className="flex items-center gap-2 shrink-0">
               <Link
                 href={`/admin/categories/${category.id}/edit`}
-                className="text-sm px-3 py-1.5 rounded-md border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-900"
+                className="text-sm px-3 py-2 rounded-md border border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-900"
               >
                 Edit
               </Link>
@@ -61,7 +61,7 @@ function DeleteButton({ disabled }: { disabled: boolean }) {
       type="submit"
       disabled={disabled}
       title={disabled ? "Move or delete its channels first" : "Delete topic"}
-      className="text-sm px-3 py-1.5 rounded-md border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950 disabled:opacity-40 disabled:cursor-not-allowed"
+      className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950 disabled:opacity-40 disabled:cursor-not-allowed"
     >
       Delete
     </button>

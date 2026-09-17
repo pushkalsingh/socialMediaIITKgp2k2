@@ -19,18 +19,18 @@ export default async function PersonPage({
   if (!person) notFound();
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-10">
+    <div className="mx-auto max-w-2xl px-4 py-6 sm:py-10">
       <Link
         href={`/category/${person.category.slug}`}
-        className="text-sm text-neutral-500 hover:underline"
+        className="-ml-1 inline-block px-1 py-2 text-sm text-neutral-500 hover:underline"
       >
         ← {person.category.icon} {person.category.name}
       </Link>
 
-      <div className="mt-6 flex items-start gap-5">
+      <div className="mt-4 flex items-start gap-4 sm:gap-5">
         <Avatar name={person.name} avatarUrl={person.avatarUrl} size="lg" />
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-2 flex-wrap">
             {person.name}
             {person.verified && (
               <span

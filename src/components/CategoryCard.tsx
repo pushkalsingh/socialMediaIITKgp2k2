@@ -16,7 +16,7 @@ export function CategoryCard({
   return (
     <Link
       href={`/category/${slug}`}
-      className="group rounded-xl border border-neutral-200 dark:border-neutral-800 p-5 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-sm transition-all flex flex-col gap-2"
+      className="group rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 sm:p-5 hover:border-neutral-400 dark:hover:border-neutral-600 hover:shadow-sm transition-all flex flex-col gap-2"
     >
       <div className="flex items-center justify-between">
         <span className="text-3xl">{icon ?? "📁"}</span>

@@ -34,7 +34,7 @@ function AdminNavLink({ href, children }: { href: string; children: React.ReactN
   return (
     <Link
       href={href}
-      className="px-3 py-1.5 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-900"
+      className="px-3 py-2 rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-900"
     >
       {children}
     </Link>

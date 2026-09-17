@@ -24,7 +24,7 @@ export default async function HomePage({
     });
 
     return (
-      <div className="mx-auto max-w-5xl px-4 py-10">
+      <div className="mx-auto max-w-5xl px-4 py-6 sm:py-10">
         <SearchBar defaultValue={query} />
         <h1 className="text-xl font-semibold mt-8 mb-4">
           {results.length} result{results.length === 1 ? "" : "s"} for “{query}”
@@ -54,9 +54,9 @@ export default async function HomePage({
   });
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
-      <div className="mb-10 text-center">
-        <h1 className="text-3xl font-bold mb-3">Who to follow, by topic</h1>
+    <div className="mx-auto max-w-5xl px-4 py-6 sm:py-10">
+      <div className="mb-8 sm:mb-10 text-center">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-3">Who to follow, by topic</h1>
         <p className="text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
           A free, community-editable directory of great YouTube, Instagram, Facebook,
           X, and TikTok accounts — organized by subject, curated by admins.
@@ -93,11 +93,11 @@ function SearchBar({ defaultValue }: { defaultValue?: string }) {
         name="q"
         defaultValue={defaultValue}
         placeholder="Search people or channels…"
-        className="flex-1 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
+        className="flex-1 min-w-0 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
       />
       <button
         type="submit"
-        className="rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:opacity-90"
+        className="rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 px-4 py-2.5 text-sm font-medium hover:opacity-90"
       >
         Search
       </button>

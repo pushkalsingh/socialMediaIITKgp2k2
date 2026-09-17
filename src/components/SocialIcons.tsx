@@ -92,7 +92,7 @@ export function SocialIcons({
   }
 
   const sizeClasses =
-    size === "lg" ? "h-10 w-10 rounded-xl" : "h-8 w-8 rounded-lg";
+    size === "lg" ? "h-11 w-11 rounded-xl" : "h-9 w-9 rounded-lg";
 
   return (
     <div className="flex flex-wrap gap-2">

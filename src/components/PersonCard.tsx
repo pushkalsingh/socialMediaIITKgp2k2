@@ -12,7 +12,7 @@ type Person = SocialLinks & {
 
 export function PersonCard({ person }: { person: Person }) {
   return (
-    <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 p-5 flex flex-col gap-3">
+    <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 sm:p-5 flex flex-col gap-3">
       <div className="flex items-start gap-3">
         <Avatar name={person.name} avatarUrl={person.avatarUrl} />
         <div className="min-w-0">
