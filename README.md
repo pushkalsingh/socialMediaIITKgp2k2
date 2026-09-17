@@ -1,6 +1,6 @@
 # Follow Wiki
 
-A Wikipedia-style directory of who to follow on YouTube, Instagram, Facebook, X, and TikTok — organized by topic. Runs entirely for free: Next.js + a local SQLite database, no external accounts required.
+A Wikipedia-style directory of who to follow on YouTube, Instagram, Facebook, X, and TikTok — organized by topic. Runs on Next.js + a free-tier Supabase Postgres database.
 
 ## What's here
 
@@ -12,22 +12,27 @@ A Wikipedia-style directory of who to follow on YouTube, Instagram, Facebook, X,
 
 ```bash
 npm install
-npm run db:push   # create the SQLite database from prisma/schema.prisma
+npm run db:push   # sync prisma/schema.prisma to your database
 npm run db:seed   # create the admin account + starter topics/channels
 npm run dev
 ```
 
 Open http://localhost:3000. Admin login is at http://localhost:3000/admin/login.
 
-Your `.env` file already has:
+Your `.env` file needs:
 
 ```
-DATABASE_URL="file:./dev.db"
 SESSION_SECRET="change-this-to-a-long-random-string-in-production"
 ADMIN_EMAIL="admin@example.com"
 ADMIN_NAME="Admin"
 ADMIN_PASSWORD="ChangeMe123!"
+
+# From Supabase: Project Settings → Database → Connection string
+DATABASE_URL="postgresql://...:6543/postgres?pgbouncer=true"   # transaction pooler — used by the running app
+DIRECT_URL="postgresql://...:5432/postgres"                     # direct/session connection — used for migrations
 ```
+
+`.env` is gitignored — it's never committed. If you're setting this up fresh against your own Supabase project, grab both connection strings from **Project Settings → Database** (not the API Keys page — this app talks to Postgres directly via Prisma, not through Supabase's client library). If your database password contains characters like `@`, `#`, or `%`, percent-encode them in the URL (e.g. `@` → `%40`) or the connection string won't parse.
 
 **Log in with `ADMIN_EMAIL` / `ADMIN_PASSWORD` and change the password immediately** from Admin → Account, or edit `.env` and re-run `npm run db:seed` before your first login. You can add more admin accounts from the same Account page.
 
@@ -49,18 +54,14 @@ To add more starter channels for a topic yourself, either use the admin UI, or a
 
 ## Data & backups
 
-Everything lives in `prisma/dev.db`, a single SQLite file (gitignored). To back up your data, just copy that file. `npm run db:studio` opens a local GUI (Prisma Studio) to browse or hand-edit the database directly.
+Everything lives in your Supabase Postgres database. Supabase takes automatic daily backups on paid plans; on the free tier, use `npm run db:studio` (Prisma Studio) to browse data, or `pg_dump` against your `DIRECT_URL` for a manual backup if you want one.
 
-## Staying free if you outgrow local-only
+## Deploying to Vercel
 
-This runs entirely on your machine right now. If you later want it live on the internet:
-
-1. **Hosting**: deploy the Next.js app to [Vercel](https://vercel.com)'s free Hobby tier.
-2. **Database**: Vercel's servers don't keep a persistent filesystem, so the SQLite file won't survive between deploys there. Swap in a free hosted database instead — [Turso](https://turso.tech) (SQLite-compatible, generous free tier, minimal code changes) or [Supabase](https://supabase.com) (Postgres, also has free auth/storage if you want to grow beyond this app's built-in login) both work well with Prisma.
-3. Update `DATABASE_URL` (and the Prisma datasource provider, if you switch to Postgres) to point at the hosted database, then run `npm run db:push` and `npm run db:seed` against it once.
-
-None of this is required to use the app locally — it's just the path if "cheapest" later becomes "cheapest *and* public."
+1. Import this repo into a new [Vercel](https://vercel.com) Hobby (free) project.
+2. In the project's Environment Variables settings, add the same variables from your local `.env`: `DATABASE_URL`, `DIRECT_URL`, `SESSION_SECRET`, `ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_PASSWORD`.
+3. Deploy. The database is already set up (you ran `db:push`/`db:seed` locally against it), so no build-time migration step is required.
 
 ## Tech stack
 
-Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Prisma 6 · SQLite · JWT session cookies (`jose`) · `bcryptjs` for password hashing.
+Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Prisma 6 · Supabase (Postgres) · JWT session cookies (`jose`) · `bcryptjs` for password hashing.
