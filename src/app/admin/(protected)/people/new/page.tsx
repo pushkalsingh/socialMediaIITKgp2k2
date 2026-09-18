@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { createPersonAction } from "@/lib/actions/people";
+import { DailyQuotaNote } from "@/components/DailyQuotaNote";
 import { PersonForm } from "../PersonForm";
 
 export default async function NewPersonPage({
@@ -12,7 +13,8 @@ export default async function NewPersonPage({
 
   return (
     <div className="max-w-lg">
-      <h1 className="text-2xl font-bold mb-6">Add a channel to follow</h1>
+      <h1 className="text-2xl font-bold mb-1">Add a channel to follow</h1>
+      <DailyQuotaNote />
       <PersonForm
         action={createPersonAction}
         error={error}

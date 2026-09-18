@@ -1,12 +1,16 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { deleteCategoryAction } from "@/lib/actions/categories";
+import { getCurrentAdmin } from "@/lib/dal";
 
 export default async function AdminCategoriesPage() {
-  const categories = await prisma.category.findMany({
-    orderBy: { name: "asc" },
-    include: { _count: { select: { people: true } } },
-  });
+  const [categories, admin] = await Promise.all([
+    prisma.category.findMany({
+      orderBy: { name: "asc" },
+      include: { _count: { select: { people: true } } },
+    }),
+    getCurrentAdmin(),
+  ]);
 
   return (
     <div>
@@ -40,10 +44,12 @@ export default async function AdminCategoriesPage() {
               >
                 Edit
               </Link>
-              <form action={deleteCategoryAction}>
-                <input type="hidden" name="id" value={category.id} />
-                <DeleteButton disabled={category._count.people > 0} />
-              </form>
+              {admin?.isSuperAdmin && (
+                <form action={deleteCategoryAction}>
+                  <input type="hidden" name="id" value={category.id} />
+                  <DeleteButton disabled={category._count.people > 0} />
+                </form>
+              )}
             </div>
           </div>
         ))}

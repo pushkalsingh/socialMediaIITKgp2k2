@@ -1,7 +1,6 @@
 "use server";
 
 import { z } from "zod";
-import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { createSession, destroySession } from "@/lib/auth";
@@ -9,21 +8,27 @@ import { getCurrentAdmin } from "@/lib/dal";
 
 const ID_NUMBER_PATTERN = /^\d{2}[A-Z]{2}\d{4}$/;
 
+function normalizeIdNumber(value: string) {
+  return value.trim().toUpperCase();
+}
+
+// No password for now — this is a small, trusted group, and email + ID number
+// (the same pair reviewed at approval time) is enough of a gate. Password
+// support is still in the schema (passwordHash) if it's needed again later.
 export async function loginAction(formData: FormData) {
   const email = String(formData.get("email") ?? "")
     .trim()
     .toLowerCase();
-  const password = String(formData.get("password") ?? "");
+  const identificationNumber = normalizeIdNumber(String(formData.get("identificationNumber") ?? ""));
 
-  if (!email || !password) {
-    redirect(`/admin/login?error=${encodeURIComponent("Email and password are required")}`);
+  if (!email || !identificationNumber) {
+    redirect(`/admin/login?error=${encodeURIComponent("Email and ID number are required")}`);
   }
 
   const admin = await prisma.admin.findUnique({ where: { email } });
-  const valid = admin ? await bcrypt.compare(password, admin.passwordHash) : false;
 
-  if (!admin || !valid) {
-    redirect(`/admin/login?error=${encodeURIComponent("Invalid email or password")}`);
+  if (!admin || admin.identificationNumber !== identificationNumber) {
+    redirect(`/admin/login?error=${encodeURIComponent("Invalid email or ID number")}`);
   }
 
   if (admin.status === "PENDING") {
@@ -50,32 +55,6 @@ export async function logoutAction() {
   redirect("/");
 }
 
-export async function changePasswordAction(formData: FormData) {
-  const admin = await getCurrentAdmin();
-  if (!admin) redirect("/admin/login");
-
-  const currentPassword = String(formData.get("currentPassword") ?? "");
-  const newPassword = String(formData.get("newPassword") ?? "");
-
-  const record = await prisma.admin.findUnique({ where: { id: admin.id } });
-  if (!record) redirect("/admin/login");
-
-  const valid = await bcrypt.compare(currentPassword, record.passwordHash);
-  if (!valid) {
-    redirect(`/admin/account?error=${encodeURIComponent("Current password is incorrect")}`);
-  }
-  if (newPassword.length < 8) {
-    redirect(
-      `/admin/account?error=${encodeURIComponent("New password must be at least 8 characters")}`
-    );
-  }
-
-  const passwordHash = await bcrypt.hash(newPassword, 10);
-  await prisma.admin.update({ where: { id: record.id }, data: { passwordHash } });
-
-  redirect(`/admin/account?success=${encodeURIComponent("Password updated")}`);
-}
-
 // Any approved admin can vouch for and directly add another admin — this
 // bypasses the identification-number request queue entirely.
 export async function addAdminAction(formData: FormData) {
@@ -86,24 +65,29 @@ export async function addAdminAction(formData: FormData) {
     .trim()
     .toLowerCase();
   const name = String(formData.get("name") ?? "").trim();
-  const password = String(formData.get("password") ?? "");
+  const identificationNumber = normalizeIdNumber(
+    String(formData.get("identificationNumber") ?? "")
+  );
 
-  if (!email || !name || password.length < 8) {
+  if (!email || !name || !ID_NUMBER_PATTERN.test(identificationNumber)) {
     redirect(
       `/admin/account?error=${encodeURIComponent(
-        "Name, email, and an 8+ character password are required"
+        "Name, email, and a valid ID number (e.g. 02ME3031) are required"
       )}`
     );
   }
 
-  const existing = await prisma.admin.findUnique({ where: { email } });
-  if (existing) {
+  const existingEmail = await prisma.admin.findUnique({ where: { email } });
+  if (existingEmail) {
     redirect(`/admin/account?error=${encodeURIComponent("An admin with that email already exists")}`);
   }
+  const existingId = await prisma.admin.findUnique({ where: { identificationNumber } });
+  if (existingId) {
+    redirect(`/admin/account?error=${encodeURIComponent("That ID number is already registered")}`);
+  }
 
-  const passwordHash = await bcrypt.hash(password, 10);
   await prisma.admin.create({
-    data: { email, name, passwordHash, status: "APPROVED", isSuperAdmin: false },
+    data: { email, name, identificationNumber, status: "APPROVED", isSuperAdmin: false },
   });
 
   redirect(`/admin/account?success=${encodeURIComponent("Admin added")}`);
@@ -117,7 +101,6 @@ const requestAccessSchema = z.object({
     .trim()
     .toUpperCase()
     .regex(ID_NUMBER_PATTERN, "ID number should look like 02ME3031 (year + department + roll number)"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 // Public: anyone can submit a request. It sits as PENDING until a super admin
@@ -127,31 +110,36 @@ export async function requestAccessAction(formData: FormData) {
     name: formData.get("name"),
     email: formData.get("email"),
     identificationNumber: formData.get("identificationNumber"),
-    password: formData.get("password"),
   });
 
   if (!parsed.success) {
     redirect(`/admin/apply?error=${encodeURIComponent(parsed.error.issues[0].message)}`);
   }
 
-  const { name, email, identificationNumber, password } = parsed.data;
+  const { name, email, identificationNumber } = parsed.data;
 
-  const existing = await prisma.admin.findUnique({ where: { email } });
-  if (existing) {
+  const existingEmail = await prisma.admin.findUnique({ where: { email } });
+  if (existingEmail) {
     redirect(
       `/admin/apply?error=${encodeURIComponent(
         "An account with that email already exists — log in, or contact the super admin if your request is still pending."
       )}`
     );
   }
+  const existingId = await prisma.admin.findUnique({ where: { identificationNumber } });
+  if (existingId) {
+    redirect(
+      `/admin/apply?error=${encodeURIComponent(
+        "That ID number has already submitted a request. Contact the super admin if you think this is a mistake."
+      )}`
+    );
+  }
 
-  const passwordHash = await bcrypt.hash(password, 10);
   await prisma.admin.create({
     data: {
       name,
       email,
       identificationNumber,
-      passwordHash,
       status: "PENDING",
       isSuperAdmin: false,
     },

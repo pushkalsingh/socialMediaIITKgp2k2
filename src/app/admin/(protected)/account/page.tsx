@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentAdmin } from "@/lib/dal";
-import { changePasswordAction, addAdminAction } from "@/lib/actions/auth";
+import { addAdminAction } from "@/lib/actions/auth";
 
 export default async function AccountPage({
   searchParams,
@@ -17,6 +17,11 @@ export default async function AccountPage({
         <h1 className="text-2xl font-bold mb-1">Account</h1>
         <p className="text-sm text-neutral-500 mb-6">
           Logged in as {admin.name} ({admin.email})
+          {admin.isSuperAdmin && (
+            <span className="ml-1.5 text-xs uppercase tracking-wide text-blue-500">
+              Super admin
+            </span>
+          )}
         </p>
 
         {error && (
@@ -29,41 +34,13 @@ export default async function AccountPage({
             {success}
           </p>
         )}
-
-        <h2 className="font-semibold mb-3">Change your password</h2>
-        <form action={changePasswordAction} className="flex flex-col gap-3">
-          <label className="text-sm font-medium">
-            Current password
-            <input
-              type="password"
-              name="currentPassword"
-              required
-              className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
-            />
-          </label>
-          <label className="text-sm font-medium">
-            New password
-            <input
-              type="password"
-              name="newPassword"
-              required
-              minLength={8}
-              className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
-            />
-          </label>
-          <button
-            type="submit"
-            className="self-start rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:opacity-90"
-          >
-            Update password
-          </button>
-        </form>
       </div>
 
       <div>
         <h2 className="font-semibold mb-1">Add another admin</h2>
         <p className="text-sm text-neutral-500 mb-3">
-          Give someone else login access to add and edit topics and channels.
+          Give someone else login access to add and edit topics and channels. No password
+          needed for now — they log in with their email and ID number.
         </p>
         <form action={addAdminAction} className="flex flex-col gap-3">
           <label className="text-sm font-medium">
@@ -85,13 +62,13 @@ export default async function AccountPage({
             />
           </label>
           <label className="text-sm font-medium">
-            Temporary password
+            ID number
             <input
-              type="password"
-              name="password"
+              type="text"
+              name="identificationNumber"
               required
-              minLength={8}
-              className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+              placeholder="e.g. 02ME3031"
+              className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm uppercase"
             />
           </label>
           <button

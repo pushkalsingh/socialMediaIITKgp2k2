@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -201,24 +200,22 @@ const categories: SeedCategory[] = [
 
 async function main() {
   const adminEmail = process.env.ADMIN_EMAIL;
-  const adminPassword = process.env.ADMIN_PASSWORD;
+  const adminIdNumber = process.env.ADMIN_ID_NUMBER;
   const adminName = process.env.ADMIN_NAME ?? "Admin";
 
-  if (!adminEmail || !adminPassword) {
+  if (!adminEmail || !adminIdNumber) {
     throw new Error(
-      "ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env before seeding."
+      "ADMIN_EMAIL and ADMIN_ID_NUMBER must be set in .env before seeding."
     );
   }
 
-  const passwordHash = await bcrypt.hash(adminPassword, 10);
-
   const admin = await prisma.admin.upsert({
     where: { email: adminEmail },
-    update: { isSuperAdmin: true, status: "APPROVED" },
+    update: { isSuperAdmin: true, status: "APPROVED", identificationNumber: adminIdNumber },
     create: {
       email: adminEmail,
       name: adminName,
-      passwordHash,
+      identificationNumber: adminIdNumber,
       isSuperAdmin: true,
       status: "APPROVED",
     },

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { updatePersonAction, deletePersonAction } from "@/lib/actions/people";
+import { getCurrentAdmin } from "@/lib/dal";
 import { PersonForm } from "../../PersonForm";
 
 export default async function EditPersonPage({
@@ -13,9 +14,10 @@ export default async function EditPersonPage({
   const { id } = await params;
   const { error } = await searchParams;
 
-  const [person, categories] = await Promise.all([
+  const [person, categories, admin] = await Promise.all([
     prisma.person.findUnique({ where: { id } }),
     prisma.category.findMany({ orderBy: { name: "asc" } }),
+    getCurrentAdmin(),
   ]);
 
   if (!person) notFound();
@@ -26,15 +28,17 @@ export default async function EditPersonPage({
     <div className="max-w-lg">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Edit channel</h1>
-        <form action={deletePersonAction}>
-          <input type="hidden" name="id" value={person.id} />
-          <button
-            type="submit"
-            className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
-          >
-            Delete
-          </button>
-        </form>
+        {admin?.isSuperAdmin && (
+          <form action={deletePersonAction}>
+            <input type="hidden" name="id" value={person.id} />
+            <button
+              type="submit"
+              className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+            >
+              Delete
+            </button>
+          </form>
+        )}
       </div>
       <PersonForm
         action={boundAction}

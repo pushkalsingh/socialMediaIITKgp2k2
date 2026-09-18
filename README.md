@@ -5,8 +5,8 @@ A Wikipedia-style directory of who to follow on YouTube, Instagram, Facebook, X,
 ## What's here
 
 - **Public site** — browse topics (Artificial Intelligence, Software Development, Web Development, Data Science, Cybersecurity, …), see the people/channels recommended for each, and search across everyone. Each channel shows which admin added it.
-- **Admin dashboard** — approved admins add/edit/delete topics and channels, mark links as verified, and add more admins directly.
-- **Access requests** — anyone can request admin access at `/admin/apply` with their name, institute ID number (e.g. `02ME3031`), email, and a password. The **super admin** reviews requests at `/admin/requests` and approves or rejects them; only approved accounts can log in. See "Admin access levels" below.
+- **Admin dashboard** — approved admins add/edit topics and channels and mark links as verified. Deleting anything, and reviewing access requests, is limited to the super admin. See "Admin access levels" below.
+- **Access requests, no password** — anyone can request admin access at `/admin/apply` with just their name, institute ID number (e.g. `02ME3031`), and email. The **super admin** reviews requests at `/admin/requests` and approves or rejects them. Once approved, logging in just needs that same email + ID number — no password, since this is meant for a small, trusted group. (Password support still exists in the schema if it's ever needed again.)
 - **Starter data** — the database ships pre-seeded with real, well-known accounts for a few topics so the site isn't empty on day one. See "About the seeded data" below.
 
 ## Getting started
@@ -26,7 +26,7 @@ Your `.env` file needs:
 SESSION_SECRET="change-this-to-a-long-random-string-in-production"
 ADMIN_EMAIL="admin@example.com"
 ADMIN_NAME="Admin"
-ADMIN_PASSWORD="ChangeMe123!"
+ADMIN_ID_NUMBER="00SU0001"
 
 # From Supabase: Project Settings → Database → Connection string
 DATABASE_URL="postgresql://...:6543/postgres?pgbouncer=true"   # transaction pooler — used by the running app
@@ -35,14 +35,14 @@ DIRECT_URL="postgresql://...:5432/postgres"                     # direct/session
 
 `.env` is gitignored — it's never committed. If you're setting this up fresh against your own Supabase project, grab both connection strings from **Project Settings → Database** (not the API Keys page — this app talks to Postgres directly via Prisma, not through Supabase's client library). If your database password contains characters like `@`, `#`, or `%`, percent-encode them in the URL (e.g. `@` → `%40`) or the connection string won't parse.
 
-**Log in with `ADMIN_EMAIL` / `ADMIN_PASSWORD` and change the password immediately** from Admin → Account, or edit `.env` and re-run `npm run db:seed` before your first login. This account is the **super admin** — it's the only one that can review access requests.
+**Log in with `ADMIN_EMAIL` / `ADMIN_ID_NUMBER`.** This account is the **super admin** — it's the only one that can review access requests and delete anything.
 
 ## Admin access levels
 
 There are two levels:
 
-- **Super admin** — the one account created by `npm run db:seed` (from `ADMIN_EMAIL`). Only this account can approve/reject access requests and revoke an existing admin's access, at `/admin/requests`. This role isn't grantable from the UI — it's set directly in the database (the seed script sets `isSuperAdmin: true` on that one row).
-- **Approved admin** — anyone approved via the request queue, or added directly by any existing approved admin (Account → "Add another admin"). Approved admins have full access to manage topics and channels, and can add other admins directly, but can't touch the request queue.
+- **Super admin** — the one account created by `npm run db:seed` (from `ADMIN_EMAIL`/`ADMIN_ID_NUMBER`). Only this account can approve/reject access requests, revoke an existing admin's access (at `/admin/requests`), and delete topics or channels. This role isn't grantable from the UI — it's set directly in the database (the seed script sets `isSuperAdmin: true` on that one row).
+- **Approved admin** — anyone approved via the request queue, or added directly by any existing approved admin (Account → "Add another admin"). Approved admins can add and edit topics/channels (up to **50 new entries per day**, combined, as a spam guard) and can add other admins directly, but can't delete anything or touch the request queue.
 
 Someone requesting access at `/admin/apply` sits as **pending** until the super admin approves them at `/admin/requests` — they can't log in until then. Rejected/revoked accounts are blocked from logging in but keep their record (so the super admin can re-approve later if needed).
 
@@ -50,8 +50,8 @@ Someone requesting access at `/admin/apply` sits as **pending** until the super 
 
 Everything — topics and the channels inside them — is managed from `/admin`:
 
-- **Topics** — add a topic (name, one-line description, an emoji icon), edit, or delete one (you'll need to remove or move its channels first).
-- **Channels** — add a person/channel: pick a topic, name, short bio, an optional avatar image URL, and any of YouTube / Instagram / Facebook / X / TikTok / personal website links. Leave any link blank if you don't have it yet — the site just won't show that icon.
+- **Topics** — add a topic (name, one-line description, an emoji icon), or edit one. Only the super admin can delete a topic (and only once its channels are removed or moved).
+- **Channels** — add a person/channel: pick a topic, name, short bio, an optional avatar image URL, and any of YouTube / Instagram / Facebook / X / TikTok / personal website links. Leave any link blank if you don't have it yet — the site just won't show that icon. Only the super admin can delete a channel.
 - Tick **"I've checked these links and they work"** when editing a channel once you've clicked through and confirmed the links are current — that adds a small ✓ badge on the public pages.
 
 ## About the seeded data
@@ -69,9 +69,9 @@ Everything lives in your Supabase Postgres database. Supabase takes automatic da
 ## Deploying to Vercel
 
 1. Import this repo into a new [Vercel](https://vercel.com) Hobby (free) project.
-2. In the project's Environment Variables settings, add the same variables from your local `.env`: `DATABASE_URL`, `DIRECT_URL`, `SESSION_SECRET`, `ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_PASSWORD`.
+2. In the project's Environment Variables settings, add the same variables from your local `.env`: `DATABASE_URL`, `DIRECT_URL`, `SESSION_SECRET`, `ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_ID_NUMBER`.
 3. Deploy. The database is already set up (you ran `db:push`/`db:seed` locally against it), so no build-time migration step is required.
 
 ## Tech stack
 
-Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Prisma 6 · Supabase (Postgres) · JWT session cookies (`jose`) · `bcryptjs` for password hashing.
+Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Prisma 6 · Supabase (Postgres) · JWT session cookies (`jose`).

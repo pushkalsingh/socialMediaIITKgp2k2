@@ -38,12 +38,13 @@ export default async function LoginPage({
           />
         </label>
         <label className="text-sm font-medium">
-          Password
+          ID number
           <input
-            type="password"
-            name="password"
+            type="text"
+            name="identificationNumber"
             required
-            className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+            placeholder="e.g. 02ME3031"
+            className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm uppercase"
           />
         </label>
         <button

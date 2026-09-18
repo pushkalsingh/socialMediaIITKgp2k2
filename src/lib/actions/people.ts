@@ -4,12 +4,18 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { getCurrentAdmin } from "@/lib/dal";
+import { getCurrentAdmin, getTodaysCreateCount, DAILY_CREATE_LIMIT } from "@/lib/dal";
 import { toSlug, uniqueSuffix } from "@/lib/slug";
 
 async function requireAdmin() {
   const admin = await getCurrentAdmin();
   if (!admin) redirect("/admin/login");
+  return admin;
+}
+
+async function requireSuperAdmin() {
+  const admin = await requireAdmin();
+  if (!admin.isSuperAdmin) redirect("/admin/people");
   return admin;
 }
 
@@ -48,6 +54,17 @@ function readPersonForm(formData: FormData) {
 
 export async function createPersonAction(formData: FormData) {
   const admin = await requireAdmin();
+
+  if (!admin.isSuperAdmin) {
+    const todaysCount = await getTodaysCreateCount(admin.id);
+    if (todaysCount >= DAILY_CREATE_LIMIT) {
+      redirect(
+        `/admin/people/new?error=${encodeURIComponent(
+          `You've hit the daily limit of ${DAILY_CREATE_LIMIT} new entries. Try again tomorrow.`
+        )}`
+      );
+    }
+  }
 
   const parsed = readPersonForm(formData);
   if (!parsed.success) {
@@ -88,8 +105,9 @@ export async function updatePersonAction(id: string, formData: FormData) {
   redirect("/admin/people");
 }
 
+// Deleting is permanent, so it's restricted to the super admin.
 export async function deletePersonAction(formData: FormData) {
-  await requireAdmin();
+  await requireSuperAdmin();
   const id = String(formData.get("id"));
   await prisma.person.delete({ where: { id } });
   revalidatePath("/");

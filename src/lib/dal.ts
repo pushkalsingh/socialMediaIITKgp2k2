@@ -30,3 +30,22 @@ export const getCurrentAdmin = cache(async (): Promise<CurrentAdmin | null> => {
     isSuperAdmin: admin.isSuperAdmin,
   };
 });
+
+// Regular (non-super) admins can add at most this many topics + channels,
+// combined, per calendar day (UTC) — a spam/abuse guard for a small, trusted
+// but not fully vetted group. Super admins are exempt.
+export const DAILY_CREATE_LIMIT = 50;
+
+function startOfTodayUTC() {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+}
+
+export async function getTodaysCreateCount(adminId: string) {
+  const since = startOfTodayUTC();
+  const [categoryCount, personCount] = await Promise.all([
+    prisma.category.count({ where: { addedById: adminId, createdAt: { gte: since } } }),
+    prisma.person.count({ where: { addedById: adminId, createdAt: { gte: since } } }),
+  ]);
+  return categoryCount + personCount;
+}

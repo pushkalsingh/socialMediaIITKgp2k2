@@ -70,18 +70,9 @@ export default async function ApplyPage({
             required
             className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
           />
-        </label>
-        <label className="text-sm font-medium">
-          Password
-          <input
-            type="password"
-            name="password"
-            required
-            minLength={8}
-            className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
-          />
           <span className="block text-xs text-neutral-500 mt-1 font-normal">
-            You&rsquo;ll use this to log in once approved.
+            No password needed — once approved, you&rsquo;ll log in with this email and your
+            ID number.
           </span>
         </label>
         <button

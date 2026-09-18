@@ -15,18 +15,21 @@ enum AdminStatus {
 }
 
 model Admin {
-  id                   String      @id @default(cuid())
-  email                String      @unique
-  name                 String
-  passwordHash         String
-  // Institute ID, e.g. 02ME3031 (year + department + roll number). Required for
-  // self-submitted access requests; not collected when an admin adds someone directly.
-  identificationNumber String?
+  id    String @id @default(cuid())
+  email String @unique
+  name  String
+  // Unused for now — no password login while this is a small, trusted group.
+  // Left in place so password login can be turned back on later without a migration.
+  passwordHash String?
+  // Institute ID, e.g. 02ME3031 (year + department + roll number). This is the
+  // login credential (alongside email) while there's no password.
+  identificationNumber String?     @unique
   isSuperAdmin         Boolean     @default(false)
   status               AdminStatus @default(APPROVED)
   createdAt            DateTime    @default(now())
 
-  people Person[] @relation("AddedBy")
+  categories Category[] @relation("CategoryAddedBy")
+  people     Person[]   @relation("AddedBy")
 }
 
 model Category {
@@ -36,6 +39,9 @@ model Category {
   description String
   icon        String? // single emoji shown next to the category name
   createdAt   DateTime @default(now())
+
+  addedById String?
+  addedBy   Admin?  @relation("CategoryAddedBy", fields: [addedById], references: [id], onDelete: SetNull)
 
   people Person[]
 }
