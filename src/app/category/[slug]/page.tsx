@@ -12,7 +12,9 @@ export default async function CategoryPage({
 
   const category = await prisma.category.findUnique({
     where: { slug },
-    include: { people: { orderBy: { name: "asc" } } },
+    include: {
+      people: { orderBy: { name: "asc" }, include: { addedBy: true } },
+    },
   });
 
   if (!category) notFound();

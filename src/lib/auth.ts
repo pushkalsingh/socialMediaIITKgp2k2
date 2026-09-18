@@ -12,10 +12,11 @@ function getSecretKey() {
   return new TextEncoder().encode(secret);
 }
 
+// Deliberately minimal: this is just a claim of identity. Anything that
+// decides *authorization* (role, approval status) must re-check the database
+// via getCurrentAdmin() in src/lib/dal.ts rather than trust this payload.
 export type SessionPayload = {
   adminId: string;
-  email: string;
-  name: string;
 };
 
 export async function createSession(payload: SessionPayload) {
@@ -47,11 +48,8 @@ export async function getSession(): Promise<SessionPayload | null> {
 
   try {
     const { payload } = await jwtVerify(token, getSecretKey());
-    return {
-      adminId: payload.adminId as string,
-      email: payload.email as string,
-      name: payload.name as string,
-    };
+    if (typeof payload.adminId !== "string") return null;
+    return { adminId: payload.adminId };
   } catch {
     return null;
   }

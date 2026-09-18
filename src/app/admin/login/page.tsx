@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { getCurrentAdmin } from "@/lib/dal";
 import { loginAction } from "@/lib/actions/auth";
 
 export default async function LoginPage({
@@ -7,8 +8,8 @@ export default async function LoginPage({
 }: {
   searchParams: Promise<{ error?: string }>;
 }) {
-  const session = await getSession();
-  if (session) redirect("/admin");
+  const admin = await getCurrentAdmin();
+  if (admin) redirect("/admin");
 
   const { error } = await searchParams;
 
@@ -52,6 +53,10 @@ export default async function LoginPage({
           Log in
         </button>
       </form>
+
+      <Link href="/admin/apply" className="inline-block mt-6 text-sm underline">
+        Need access? Submit your ID number for approval
+      </Link>
     </div>
   );
 }

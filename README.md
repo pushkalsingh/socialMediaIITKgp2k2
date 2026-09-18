@@ -4,8 +4,9 @@ A Wikipedia-style directory of who to follow on YouTube, Instagram, Facebook, X,
 
 ## What's here
 
-- **Public site** — browse topics (Artificial Intelligence, Software Development, Web Development, Data Science, Cybersecurity, …), see the people/channels recommended for each, and search across everyone.
-- **Admin dashboard** — log in to add/edit/delete topics and channels, mark links as verified, and add more admin accounts.
+- **Public site** — browse topics (Artificial Intelligence, Software Development, Web Development, Data Science, Cybersecurity, …), see the people/channels recommended for each, and search across everyone. Each channel shows which admin added it.
+- **Admin dashboard** — approved admins add/edit/delete topics and channels, mark links as verified, and add more admins directly.
+- **Access requests** — anyone can request admin access at `/admin/apply` with their name, institute ID number (e.g. `02ME3031`), email, and a password. The **super admin** reviews requests at `/admin/requests` and approves or rejects them; only approved accounts can log in. See "Admin access levels" below.
 - **Starter data** — the database ships pre-seeded with real, well-known accounts for a few topics so the site isn't empty on day one. See "About the seeded data" below.
 
 ## Getting started
@@ -34,7 +35,16 @@ DIRECT_URL="postgresql://...:5432/postgres"                     # direct/session
 
 `.env` is gitignored — it's never committed. If you're setting this up fresh against your own Supabase project, grab both connection strings from **Project Settings → Database** (not the API Keys page — this app talks to Postgres directly via Prisma, not through Supabase's client library). If your database password contains characters like `@`, `#`, or `%`, percent-encode them in the URL (e.g. `@` → `%40`) or the connection string won't parse.
 
-**Log in with `ADMIN_EMAIL` / `ADMIN_PASSWORD` and change the password immediately** from Admin → Account, or edit `.env` and re-run `npm run db:seed` before your first login. You can add more admin accounts from the same Account page.
+**Log in with `ADMIN_EMAIL` / `ADMIN_PASSWORD` and change the password immediately** from Admin → Account, or edit `.env` and re-run `npm run db:seed` before your first login. This account is the **super admin** — it's the only one that can review access requests.
+
+## Admin access levels
+
+There are two levels:
+
+- **Super admin** — the one account created by `npm run db:seed` (from `ADMIN_EMAIL`). Only this account can approve/reject access requests and revoke an existing admin's access, at `/admin/requests`. This role isn't grantable from the UI — it's set directly in the database (the seed script sets `isSuperAdmin: true` on that one row).
+- **Approved admin** — anyone approved via the request queue, or added directly by any existing approved admin (Account → "Add another admin"). Approved admins have full access to manage topics and channels, and can add other admins directly, but can't touch the request queue.
+
+Someone requesting access at `/admin/apply` sits as **pending** until the super admin approves them at `/admin/requests` — they can't log in until then. Rejected/revoked accounts are blocked from logging in but keep their record (so the super admin can re-approve later if needed).
 
 ## Managing content
 

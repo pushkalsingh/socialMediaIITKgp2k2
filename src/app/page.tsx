@@ -20,7 +20,7 @@ export default async function HomePage({
         ],
       },
       orderBy: { name: "asc" },
-      include: { category: true },
+      include: { category: true, addedBy: true },
     });
 
     return (

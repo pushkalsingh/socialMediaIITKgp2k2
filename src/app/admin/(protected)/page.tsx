@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { getCurrentAdmin } from "@/lib/dal";
 
 export default async function AdminDashboard() {
-  const [categoryCount, personCount, unverifiedCount] = await Promise.all([
+  const admin = await getCurrentAdmin();
+
+  const [categoryCount, personCount, unverifiedCount, pendingCount] = await Promise.all([
     prisma.category.count(),
     prisma.person.count(),
     prisma.person.count({ where: { verified: false } }),
+    admin?.isSuperAdmin ? prisma.admin.count({ where: { status: "PENDING" } }) : Promise.resolve(0),
   ]);
 
   return (
@@ -17,6 +21,16 @@ export default async function AdminDashboard() {
         <StatCard label="Channels" value={personCount} />
         <StatCard label="Unverified links" value={unverifiedCount} />
       </div>
+
+      {admin?.isSuperAdmin && pendingCount > 0 && (
+        <p className="mb-6 text-sm">
+          {pendingCount} admin access request{pendingCount === 1 ? "" : "s"} awaiting your
+          review.{" "}
+          <Link href="/admin/requests" className="underline font-medium">
+            Review requests
+          </Link>
+        </p>
+      )}
 
       <div className="flex flex-wrap gap-3">
         <Link

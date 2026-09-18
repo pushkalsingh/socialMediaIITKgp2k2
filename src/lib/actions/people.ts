@@ -4,13 +4,13 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth";
+import { getCurrentAdmin } from "@/lib/dal";
 import { toSlug, uniqueSuffix } from "@/lib/slug";
 
 async function requireAdmin() {
-  const session = await getSession();
-  if (!session) redirect("/admin/login");
-  return session;
+  const admin = await getCurrentAdmin();
+  if (!admin) redirect("/admin/login");
+  return admin;
 }
 
 const urlField = z
@@ -47,7 +47,7 @@ function readPersonForm(formData: FormData) {
 }
 
 export async function createPersonAction(formData: FormData) {
-  const session = await requireAdmin();
+  const admin = await requireAdmin();
 
   const parsed = readPersonForm(formData);
   if (!parsed.success) {
@@ -60,7 +60,7 @@ export async function createPersonAction(formData: FormData) {
   if (existing) slug = `${slug}-${uniqueSuffix()}`;
 
   await prisma.person.create({
-    data: { ...data, slug, addedById: session.adminId },
+    data: { ...data, slug, addedById: admin.id },
   });
 
   revalidatePath("/");

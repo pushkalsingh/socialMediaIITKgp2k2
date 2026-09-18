@@ -8,6 +8,7 @@ type Person = SocialLinks & {
   bio: string;
   avatarUrl?: string | null;
   verified: boolean;
+  addedBy?: { name: string } | null;
 };
 
 export function PersonCard({ person }: { person: Person }) {
@@ -30,6 +31,11 @@ export function PersonCard({ person }: { person: Person }) {
           <p className="text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2 mt-0.5">
             {person.bio}
           </p>
+          {person.addedBy && (
+            <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">
+              Added by {person.addedBy.name}
+            </p>
+          )}
         </div>
       </div>
       <SocialIcons links={person} />

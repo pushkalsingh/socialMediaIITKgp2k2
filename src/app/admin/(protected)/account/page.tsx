@@ -1,4 +1,5 @@
-import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { getCurrentAdmin } from "@/lib/dal";
 import { changePasswordAction, addAdminAction } from "@/lib/actions/auth";
 
 export default async function AccountPage({
@@ -6,7 +7,8 @@ export default async function AccountPage({
 }: {
   searchParams: Promise<{ error?: string; success?: string }>;
 }) {
-  const session = await getSession();
+  const admin = await getCurrentAdmin();
+  if (!admin) redirect("/admin/login");
   const { error, success } = await searchParams;
 
   return (
@@ -14,7 +16,7 @@ export default async function AccountPage({
       <div>
         <h1 className="text-2xl font-bold mb-1">Account</h1>
         <p className="text-sm text-neutral-500 mb-6">
-          Logged in as {session?.name} ({session?.email})
+          Logged in as {admin.name} ({admin.email})
         </p>
 
         {error && (

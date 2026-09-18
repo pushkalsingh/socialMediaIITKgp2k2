@@ -8,12 +8,23 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum AdminStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Admin {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String
-  passwordHash String
-  createdAt    DateTime @default(now())
+  id                   String      @id @default(cuid())
+  email                String      @unique
+  name                 String
+  passwordHash         String
+  // Institute ID, e.g. 02ME3031 (year + department + roll number). Required for
+  // self-submitted access requests; not collected when an admin adds someone directly.
+  identificationNumber String?
+  isSuperAdmin         Boolean     @default(false)
+  status               AdminStatus @default(APPROVED)
+  createdAt            DateTime    @default(now())
 
   people Person[] @relation("AddedBy")
 }

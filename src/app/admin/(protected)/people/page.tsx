@@ -5,7 +5,7 @@ import { deletePersonAction } from "@/lib/actions/people";
 export default async function AdminPeoplePage() {
   const people = await prisma.person.findMany({
     orderBy: [{ category: { name: "asc" } }, { name: "asc" }],
-    include: { category: true },
+    include: { category: true, addedBy: true },
   });
 
   return (
@@ -34,6 +34,7 @@ export default async function AdminPeoplePage() {
               </p>
               <p className="text-xs text-neutral-500 truncate">
                 {person.category.icon} {person.category.name} · /person/{person.slug}
+                {person.addedBy && ` · added by ${person.addedBy.name}`}
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">

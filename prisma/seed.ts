@@ -214,15 +214,17 @@ async function main() {
 
   const admin = await prisma.admin.upsert({
     where: { email: adminEmail },
-    update: {},
+    update: { isSuperAdmin: true, status: "APPROVED" },
     create: {
       email: adminEmail,
       name: adminName,
       passwordHash,
+      isSuperAdmin: true,
+      status: "APPROVED",
     },
   });
 
-  console.log(`Admin ready: ${admin.email}`);
+  console.log(`Super admin ready: ${admin.email}`);
 
   for (const category of categories) {
     const createdCategory = await prisma.category.upsert({

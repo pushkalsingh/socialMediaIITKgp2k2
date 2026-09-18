@@ -13,7 +13,7 @@ export default async function PersonPage({
 
   const person = await prisma.person.findUnique({
     where: { slug },
-    include: { category: true },
+    include: { category: true, addedBy: true },
   });
 
   if (!person) notFound();
@@ -51,6 +51,12 @@ export default async function PersonPage({
         </h2>
         <SocialIcons links={person} size="lg" />
       </div>
+
+      {person.addedBy && (
+        <p className="mt-8 text-xs text-neutral-400 dark:text-neutral-500">
+          Added by {person.addedBy.name}
+        </p>
+      )}
     </div>
   );
 }

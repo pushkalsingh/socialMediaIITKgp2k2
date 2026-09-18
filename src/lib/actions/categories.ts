@@ -4,13 +4,13 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth";
+import { getCurrentAdmin } from "@/lib/dal";
 import { toSlug, uniqueSuffix } from "@/lib/slug";
 
 async function requireAdmin() {
-  const session = await getSession();
-  if (!session) redirect("/admin/login");
-  return session;
+  const admin = await getCurrentAdmin();
+  if (!admin) redirect("/admin/login");
+  return admin;
 }
 
 const categorySchema = z.object({
