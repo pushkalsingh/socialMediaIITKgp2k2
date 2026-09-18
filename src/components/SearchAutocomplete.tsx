@@ -102,21 +102,37 @@ export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) 
           goToAllResults();
         }}
       >
-        <input
-          type="search"
-          name="q"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onFocus={() => suggestions.length > 0 && setOpen(true)}
-          placeholder="Search topics, people, or channels…"
-          autoComplete="off"
-          role="combobox"
-          aria-expanded={open}
-          aria-controls="search-suggestions"
-          aria-autocomplete="list"
-          className="flex-1 min-w-0 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
-        />
+        <div className="relative flex-1 min-w-0">
+          <input
+            type="text"
+            name="q"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onFocus={() => suggestions.length > 0 && setOpen(true)}
+            placeholder="Search topics, people, or channels…"
+            autoComplete="off"
+            role="combobox"
+            aria-expanded={open}
+            aria-controls="search-suggestions"
+            aria-autocomplete="list"
+            className="w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2.5 pr-9 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
+          />
+          {value && (
+            <button
+              type="button"
+              onClick={() => {
+                setValue("");
+                setSuggestions([]);
+                setOpen(false);
+              }}
+              aria-label="Clear search"
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-5 w-5 flex items-center justify-center rounded-full text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
+            >
+              ×
+            </button>
+          )}
+        </div>
         <button
           type="submit"
           className="rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 px-4 py-2.5 text-sm font-medium hover:opacity-90"
