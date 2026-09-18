@@ -4,12 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Avatar } from "@/components/Avatar";
 
-type Suggestion = {
-  name: string;
-  slug: string;
-  avatarUrl: string | null;
-  category: { name: string; icon: string | null };
-};
+type Suggestion =
+  | { type: "category"; name: string; slug: string; icon: string | null; count: number }
+  | {
+      type: "person";
+      name: string;
+      slug: string;
+      avatarUrl: string | null;
+      category: { name: string; icon: string | null };
+    };
+
+function suggestionHref(suggestion: Suggestion) {
+  return suggestion.type === "category" ? `/category/${suggestion.slug}` : `/person/${suggestion.slug}`;
+}
 
 export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) {
   const router = useRouter();
@@ -63,9 +70,9 @@ export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) 
     router.push(`/?q=${encodeURIComponent(value.trim())}`);
   }
 
-  function goToPerson(slug: string) {
+  function goToSuggestion(suggestion: Suggestion) {
     setOpen(false);
-    router.push(`/person/${slug}`);
+    router.push(suggestionHref(suggestion));
   }
 
   function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -79,7 +86,7 @@ export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) 
       setHighlighted((i) => (i <= 0 ? suggestions.length - 1 : i - 1));
     } else if (event.key === "Enter" && highlighted >= 0) {
       event.preventDefault();
-      goToPerson(suggestions[highlighted].slug);
+      goToSuggestion(suggestions[highlighted]);
     } else if (event.key === "Escape") {
       setOpen(false);
     }
@@ -102,7 +109,7 @@ export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) 
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           onFocus={() => suggestions.length > 0 && setOpen(true)}
-          placeholder="Search people or channels…"
+          placeholder="Search topics, people, or channels…"
           autoComplete="off"
           role="combobox"
           aria-expanded={open}
@@ -124,12 +131,16 @@ export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) 
           role="listbox"
           className="absolute z-20 mt-1 w-full rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 shadow-lg overflow-hidden"
         >
-          {suggestions.map((person, index) => (
-            <li key={person.slug} role="option" aria-selected={index === highlighted}>
+          {suggestions.map((suggestion, index) => (
+            <li
+              key={`${suggestion.type}-${suggestion.slug}`}
+              role="option"
+              aria-selected={index === highlighted}
+            >
               <button
                 type="button"
                 onMouseDown={(e) => e.preventDefault()}
-                onClick={() => goToPerson(person.slug)}
+                onClick={() => goToSuggestion(suggestion)}
                 onMouseEnter={() => setHighlighted(index)}
                 className={`w-full flex items-center gap-3 px-3 py-2 text-left text-sm ${
                   index === highlighted
@@ -137,13 +148,29 @@ export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) 
                     : "hover:bg-neutral-50 dark:hover:bg-neutral-900"
                 }`}
               >
-                <Avatar name={person.name} avatarUrl={person.avatarUrl} size="sm" />
-                <span className="min-w-0 flex-1">
-                  <span className="block font-medium truncate">{person.name}</span>
-                  <span className="block text-xs text-neutral-500 truncate">
-                    {person.category.icon} {person.category.name}
-                  </span>
-                </span>
+                {suggestion.type === "category" ? (
+                  <>
+                    <span className="h-10 w-10 rounded-full flex items-center justify-center text-lg bg-neutral-100 dark:bg-neutral-900 shrink-0">
+                      {suggestion.icon ?? "📁"}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-medium truncate">{suggestion.name}</span>
+                      <span className="block text-xs text-neutral-500 truncate">
+                        Topic · {suggestion.count} channel{suggestion.count === 1 ? "" : "s"}
+                      </span>
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Avatar name={suggestion.name} avatarUrl={suggestion.avatarUrl} size="sm" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-medium truncate">{suggestion.name}</span>
+                      <span className="block text-xs text-neutral-500 truncate">
+                        {suggestion.category.icon} {suggestion.category.name}
+                      </span>
+                    </span>
+                  </>
+                )}
               </button>
             </li>
           ))}

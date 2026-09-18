@@ -13,37 +13,82 @@ export default async function HomePage({
   const query = q?.trim();
 
   if (query) {
-    const results = await prisma.person.findMany({
-      where: {
-        OR: [
-          { name: { contains: query, mode: "insensitive" } },
-          { bio: { contains: query, mode: "insensitive" } },
-        ],
-      },
-      orderBy: { name: "asc" },
-      include: { category: true, addedBy: true },
-    });
+    const [matchingCategories, matchingPeople] = await Promise.all([
+      prisma.category.findMany({
+        where: {
+          OR: [
+            { name: { contains: query, mode: "insensitive" } },
+            { description: { contains: query, mode: "insensitive" } },
+          ],
+        },
+        orderBy: { name: "asc" },
+        include: { _count: { select: { people: true } } },
+      }),
+      prisma.person.findMany({
+        where: {
+          OR: [
+            { name: { contains: query, mode: "insensitive" } },
+            { bio: { contains: query, mode: "insensitive" } },
+          ],
+        },
+        orderBy: { name: "asc" },
+        include: { category: true, addedBy: true },
+      }),
+    ]);
+
+    const totalResults = matchingCategories.length + matchingPeople.length;
 
     return (
       <div className="mx-auto max-w-5xl px-4 py-6 sm:py-10">
         <SearchAutocomplete defaultValue={query} />
         <h1 className="text-xl font-semibold mt-8 mb-4">
-          {results.length} result{results.length === 1 ? "" : "s"} for “{query}”
+          {totalResults} result{totalResults === 1 ? "" : "s"} for “{query}”
         </h1>
-        <div className="grid sm:grid-cols-2 gap-4">
-          {results.map((person) => (
-            <div key={person.id}>
-              <p className="text-xs text-neutral-500 mb-1">
-                <Link href={`/category/${person.category.slug}`} className="hover:underline">
-                  {person.category.icon} {person.category.name}
-                </Link>
-              </p>
-              <PersonCard person={person} />
+
+        {matchingCategories.length > 0 && (
+          <div className="mb-8">
+            <h2 className="font-semibold text-neutral-500 uppercase text-xs tracking-wide mb-3">
+              Topics
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {matchingCategories.map((category) => (
+                <CategoryCard
+                  key={category.id}
+                  slug={category.slug}
+                  name={category.name}
+                  description={category.description}
+                  icon={category.icon}
+                  count={category._count.people}
+                />
+              ))}
             </div>
-          ))}
-        </div>
-        {results.length === 0 && (
-          <p className="text-neutral-500">No one matches that search yet.</p>
+          </div>
+        )}
+
+        {matchingPeople.length > 0 && (
+          <div>
+            {matchingCategories.length > 0 && (
+              <h2 className="font-semibold text-neutral-500 uppercase text-xs tracking-wide mb-3">
+                People &amp; channels
+              </h2>
+            )}
+            <div className="grid sm:grid-cols-2 gap-4">
+              {matchingPeople.map((person) => (
+                <div key={person.id}>
+                  <p className="text-xs text-neutral-500 mb-1">
+                    <Link href={`/category/${person.category.slug}`} className="hover:underline">
+                      {person.category.icon} {person.category.name}
+                    </Link>
+                  </p>
+                  <PersonCard person={person} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {totalResults === 0 && (
+          <p className="text-neutral-500">Nothing matches that search yet.</p>
         )}
       </div>
     );
