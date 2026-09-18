@@ -22,20 +22,22 @@ export default async function PersonPage({
     <div className="mx-auto max-w-2xl px-4 py-6 sm:py-10">
       <Link
         href={`/category/${person.category.slug}`}
-        className="-ml-1 inline-block px-1 py-2 text-sm text-neutral-500 hover:underline"
+        className="-ml-1 inline-block px-1 py-2 text-sm text-neutral-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
       >
         ← {person.category.icon} {person.category.name}
       </Link>
 
-      <div className="mt-4 flex items-start gap-4 sm:gap-5">
-        <Avatar name={person.name} avatarUrl={person.avatarUrl} size="lg" />
+      <div className="mt-4 flex items-start gap-4 sm:gap-5 animate-fade-in-up">
+        <div className="group">
+          <Avatar name={person.name} avatarUrl={person.avatarUrl} size="lg" />
+        </div>
         <div className="min-w-0">
           <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-2 flex-wrap">
             {person.name}
             {person.verified && (
               <span
                 title="An admin has verified these links are live"
-                className="text-blue-500 text-lg"
+                className="text-indigo-500 text-lg"
               >
                 ✓
               </span>
@@ -45,7 +47,7 @@ export default async function PersonPage({
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-6 animate-fade-in-up" style={{ animationDelay: "80ms" }}>
         <h2 className="text-xs font-semibold uppercase tracking-wide text-neutral-500 mb-2">
           Follow
         </h2>

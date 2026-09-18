@@ -49,7 +49,7 @@ export default async function RequestsPage({
                 <input type="hidden" name="id" value={request.id} />
                 <button
                   type="submit"
-                  className="text-sm px-3 py-2 rounded-md border border-green-200 text-green-700 hover:bg-green-50 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-950"
+                  className="text-sm px-3 py-2 rounded-md border border-green-200 text-green-700 transition-all duration-150 hover:bg-green-50 hover:shadow-sm active:scale-95 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-950"
                 >
                   Approve
                 </button>
@@ -58,7 +58,7 @@ export default async function RequestsPage({
                 <input type="hidden" name="id" value={request.id} />
                 <button
                   type="submit"
-                  className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+                  className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 transition-all duration-150 hover:bg-red-50 hover:shadow-sm active:scale-95 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
                 >
                   Reject
                 </button>
@@ -79,7 +79,7 @@ export default async function RequestsPage({
               <p className="font-medium truncate">
                 {record.name}
                 {record.isSuperAdmin && (
-                  <span className="ml-1.5 text-xs uppercase tracking-wide text-blue-500">
+                  <span className="ml-1.5 text-xs uppercase tracking-wide text-indigo-500">
                     Super admin
                   </span>
                 )}
@@ -96,7 +96,7 @@ export default async function RequestsPage({
                   <input type="hidden" name="id" value={record.id} />
                   <button
                     type="submit"
-                    className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+                    className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 transition-all duration-150 hover:bg-red-50 hover:shadow-sm active:scale-95 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
                   >
                     Revoke
                   </button>
@@ -107,7 +107,7 @@ export default async function RequestsPage({
                   <input type="hidden" name="id" value={record.id} />
                   <button
                     type="submit"
-                    className="text-sm px-3 py-2 rounded-md border border-green-200 text-green-700 hover:bg-green-50 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-950"
+                    className="text-sm px-3 py-2 rounded-md border border-green-200 text-green-700 transition-all duration-150 hover:bg-green-50 hover:shadow-sm active:scale-95 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-950"
                   >
                     Approve
                   </button>

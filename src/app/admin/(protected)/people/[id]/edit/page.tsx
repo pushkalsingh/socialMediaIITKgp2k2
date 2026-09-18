@@ -33,7 +33,7 @@ export default async function EditPersonPage({
             <input type="hidden" name="id" value={person.id} />
             <button
               type="submit"
-              className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+              className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 transition-all duration-150 hover:bg-red-50 hover:shadow-sm active:scale-95 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
             >
               Delete
             </button>

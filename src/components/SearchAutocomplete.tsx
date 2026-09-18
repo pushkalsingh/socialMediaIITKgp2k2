@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Avatar } from "@/components/Avatar";
+import { colorThemeFor } from "@/lib/colors";
 
 type Suggestion =
   | { type: "category"; name: string; slug: string; icon: string | null; count: number }
@@ -116,7 +117,7 @@ export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) 
             aria-expanded={open}
             aria-controls="search-suggestions"
             aria-autocomplete="list"
-            className="w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2.5 pr-9 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-400"
+            className="w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2.5 pr-9 text-sm transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500"
           />
           {value && (
             <button
@@ -135,7 +136,7 @@ export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) 
         </div>
         <button
           type="submit"
-          className="rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 px-4 py-2.5 text-sm font-medium hover:opacity-90"
+          className="rounded-lg bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white px-4 py-2.5 text-sm font-medium shadow-sm transition-all duration-150 hover:shadow-md hover:brightness-110 active:scale-95"
         >
           Search
         </button>
@@ -145,7 +146,8 @@ export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) 
         <ul
           id="search-suggestions"
           role="listbox"
-          className="absolute z-20 mt-1 w-full rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 shadow-lg overflow-hidden"
+          className="absolute z-20 mt-1 w-full rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 shadow-lg overflow-hidden animate-fade-in-up"
+          style={{ animationDuration: "0.15s" }}
         >
           {suggestions.map((suggestion, index) => (
             <li
@@ -158,15 +160,17 @@ export function SearchAutocomplete({ defaultValue }: { defaultValue?: string }) 
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => goToSuggestion(suggestion)}
                 onMouseEnter={() => setHighlighted(index)}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-left text-sm ${
+                className={`w-full flex items-center gap-3 px-3 py-2 text-left text-sm transition-colors ${
                   index === highlighted
-                    ? "bg-neutral-100 dark:bg-neutral-900"
+                    ? "bg-indigo-50 dark:bg-indigo-500/10"
                     : "hover:bg-neutral-50 dark:hover:bg-neutral-900"
                 }`}
               >
                 {suggestion.type === "category" ? (
                   <>
-                    <span className="h-10 w-10 rounded-full flex items-center justify-center text-lg bg-neutral-100 dark:bg-neutral-900 shrink-0">
+                    <span
+                      className={`h-10 w-10 rounded-full flex items-center justify-center text-lg shrink-0 ${colorThemeFor(suggestion.name).chip}`}
+                    >
                       {suggestion.icon ?? "📁"}
                     </span>
                     <span className="min-w-0 flex-1">

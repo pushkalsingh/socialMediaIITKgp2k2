@@ -31,7 +31,7 @@ export function CategoryForm({
           defaultValue={defaultValues?.icon ?? ""}
           placeholder="📁"
           maxLength={8}
-          className="mt-1 w-24 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+          className="mt-1 w-24 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
         />
       </label>
 
@@ -43,7 +43,7 @@ export function CategoryForm({
           required
           defaultValue={defaultValues?.name}
           placeholder="e.g. Artificial Intelligence"
-          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
         />
       </label>
 
@@ -55,13 +55,13 @@ export function CategoryForm({
           rows={3}
           defaultValue={defaultValues?.description}
           placeholder="One or two sentences describing this topic"
-          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
         />
       </label>
 
       <button
         type="submit"
-        className="self-start rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:opacity-90"
+        className="self-start rounded-lg bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white px-4 py-2 text-sm font-medium shadow-sm transition-all duration-150 hover:shadow-md hover:brightness-110 active:scale-95"
       >
         {submitLabel}
       </button>

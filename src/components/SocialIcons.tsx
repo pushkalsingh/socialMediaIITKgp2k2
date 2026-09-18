@@ -104,7 +104,7 @@ export function SocialIcons({
           rel="noopener noreferrer nofollow"
           title={LABELS[platform]}
           aria-label={`${LABELS[platform]} profile`}
-          className={`flex items-center justify-center border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 transition-colors ${sizeClasses} ${COLORS[platform]}`}
+          className={`flex items-center justify-center border border-neutral-300 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 transition-all duration-150 hover:scale-110 hover:shadow-md active:scale-95 ${sizeClasses} ${COLORS[platform]}`}
         >
           <Icon platform={platform} />
         </a>

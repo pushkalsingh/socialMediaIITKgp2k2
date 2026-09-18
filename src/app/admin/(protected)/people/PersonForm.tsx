@@ -43,7 +43,7 @@ export function PersonForm({
           name="categoryId"
           required
           defaultValue={defaultValues?.categoryId}
-          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
         >
           <option value="" disabled>
             Choose a topic…
@@ -64,7 +64,7 @@ export function PersonForm({
           required
           defaultValue={defaultValues?.name}
           placeholder="e.g. Andrej Karpathy"
-          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
         />
       </label>
 
@@ -76,7 +76,7 @@ export function PersonForm({
           rows={3}
           defaultValue={defaultValues?.bio}
           placeholder="One or two sentences on who they are and why they're worth following"
-          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
         />
       </label>
 
@@ -87,7 +87,7 @@ export function PersonForm({
           name="avatarUrl"
           defaultValue={defaultValues?.avatarUrl ?? ""}
           placeholder="https://…"
-          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+          className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
         />
         <span className="block text-xs text-neutral-500 mt-1 font-normal">
           Leave blank to show a generated initials avatar instead.
@@ -112,7 +112,7 @@ export function PersonForm({
             type="checkbox"
             name="verified"
             defaultChecked={defaultValues?.verified}
-            className="h-4 w-4"
+            className="h-4 w-4 accent-indigo-600"
           />
           I&rsquo;ve checked these links and they work
         </label>
@@ -120,7 +120,7 @@ export function PersonForm({
 
       <button
         type="submit"
-        className="self-start rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:opacity-90"
+        className="self-start rounded-lg bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white px-4 py-2 text-sm font-medium shadow-sm transition-all duration-150 hover:shadow-md hover:brightness-110 active:scale-95"
       >
         {submitLabel}
       </button>
@@ -147,7 +147,7 @@ function UrlField({
         name={name}
         defaultValue={defaultValue ?? ""}
         placeholder="https://…"
-        className="flex-1 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+        className="flex-1 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
       />
     </label>
   );

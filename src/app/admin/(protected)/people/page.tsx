@@ -18,7 +18,7 @@ export default async function AdminPeoplePage() {
         <h1 className="text-2xl font-bold">Channels</h1>
         <Link
           href="/admin/people/new"
-          className="rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:opacity-90"
+          className="rounded-lg bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white px-4 py-2 text-sm font-medium shadow-sm transition-all duration-150 hover:shadow-md hover:brightness-110 active:scale-95"
         >
           + Add channel
         </Link>
@@ -31,7 +31,7 @@ export default async function AdminPeoplePage() {
               <p className="font-medium truncate">
                 {person.name}
                 {person.verified && (
-                  <span className="ml-1.5 text-blue-500" title="Links verified">
+                  <span className="ml-1.5 text-indigo-500" title="Links verified">
                     ✓
                   </span>
                 )}
@@ -53,7 +53,7 @@ export default async function AdminPeoplePage() {
                   <input type="hidden" name="id" value={person.id} />
                   <button
                     type="submit"
-                    className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
+                    className="text-sm px-3 py-2 rounded-md border border-red-200 text-red-600 transition-all duration-150 hover:bg-red-50 hover:shadow-sm active:scale-95 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-950"
                   >
                     Delete
                   </button>

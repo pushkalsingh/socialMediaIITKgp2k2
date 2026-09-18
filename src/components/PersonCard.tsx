@@ -13,17 +13,20 @@ type Person = SocialLinks & {
 
 export function PersonCard({ person }: { person: Person }) {
   return (
-    <div className="rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 sm:p-5 flex flex-col gap-3">
+    <div className="group rounded-xl border border-neutral-200 dark:border-neutral-800 p-4 sm:p-5 flex flex-col gap-3 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-neutral-300 dark:hover:border-neutral-700">
       <div className="flex items-start gap-3">
         <Avatar name={person.name} avatarUrl={person.avatarUrl} />
         <div className="min-w-0">
-          <Link href={`/person/${person.slug}`} className="font-semibold hover:underline">
+          <Link
+            href={`/person/${person.slug}`}
+            className="font-semibold hover:underline decoration-2 underline-offset-2"
+          >
             {person.name}
           </Link>
           {person.verified && (
             <span
               title="An admin has verified these links are live"
-              className="ml-1.5 inline-block text-blue-500 align-middle"
+              className="ml-1.5 inline-block text-indigo-500 align-middle"
             >
               ✓
             </span>

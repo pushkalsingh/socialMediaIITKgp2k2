@@ -46,7 +46,7 @@ export default async function ApplyPage({
             name="name"
             required
             autoFocus
-            className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
           />
         </label>
         <label className="text-sm font-medium">
@@ -56,7 +56,7 @@ export default async function ApplyPage({
             name="identificationNumber"
             required
             placeholder="e.g. 02ME3031"
-            className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm uppercase"
+            className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm uppercase"
           />
           <span className="block text-xs text-neutral-500 mt-1 font-normal">
             Year of admission + department + roll number.
@@ -68,7 +68,7 @@ export default async function ApplyPage({
             type="email"
             name="email"
             required
-            className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+            className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
           />
           <span className="block text-xs text-neutral-500 mt-1 font-normal">
             No password needed — once approved, you&rsquo;ll log in with this email and your
@@ -77,7 +77,7 @@ export default async function ApplyPage({
         </label>
         <button
           type="submit"
-          className="mt-2 rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:opacity-90"
+          className="mt-2 rounded-lg bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white px-4 py-2 text-sm font-medium shadow-sm transition-all duration-150 hover:shadow-md hover:brightness-110 active:scale-95"
         >
           Submit request
         </button>

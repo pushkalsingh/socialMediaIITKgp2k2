@@ -35,13 +35,13 @@ export default async function AdminDashboard() {
       <div className="flex flex-wrap gap-3">
         <Link
           href="/admin/categories/new"
-          className="rounded-lg bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 px-4 py-2 text-sm font-medium hover:opacity-90"
+          className="rounded-lg bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white px-4 py-2 text-sm font-medium shadow-sm transition-all duration-150 hover:shadow-md hover:brightness-110 active:scale-95"
         >
           + Add a topic
         </Link>
         <Link
           href="/admin/people/new"
-          className="rounded-lg border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-900"
+          className="rounded-lg border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm font-medium transition-all duration-150 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:border-neutral-400 active:scale-95"
         >
           + Add a channel to follow
         </Link>

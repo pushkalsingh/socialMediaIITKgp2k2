@@ -51,15 +51,20 @@ export default async function HomePage({
               Topics
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {matchingCategories.map((category) => (
-                <CategoryCard
+              {matchingCategories.map((category, index) => (
+                <div
                   key={category.id}
-                  slug={category.slug}
-                  name={category.name}
-                  description={category.description}
-                  icon={category.icon}
-                  count={category._count.people}
-                />
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${index * 40}ms` }}
+                >
+                  <CategoryCard
+                    slug={category.slug}
+                    name={category.name}
+                    description={category.description}
+                    icon={category.icon}
+                    count={category._count.people}
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -73,8 +78,12 @@ export default async function HomePage({
               </h2>
             )}
             <div className="grid sm:grid-cols-2 gap-4">
-              {matchingPeople.map((person) => (
-                <div key={person.id}>
+              {matchingPeople.map((person, index) => (
+                <div
+                  key={person.id}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${index * 40}ms` }}
+                >
                   <p className="text-xs text-neutral-500 mb-1">
                     <Link href={`/category/${person.category.slug}`} className="hover:underline">
                       {person.category.icon} {person.category.name}
@@ -100,32 +109,44 @@ export default async function HomePage({
   });
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-6 sm:py-10">
-      <div className="mb-8 sm:mb-10 text-center">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-3">Who to follow, by topic</h1>
-        <p className="text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
-          A free, community-editable directory of great YouTube, Instagram, Facebook,
-          X, and TikTok accounts — organized by subject, curated by admins.
-        </p>
-        <div className="mt-6 max-w-md mx-auto">
-          <SearchAutocomplete />
+    <div className="hero-glow">
+      <div className="mx-auto max-w-5xl px-4 py-6 sm:py-10">
+        <div className="mb-8 sm:mb-10 text-center animate-fade-in-up">
+          <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 tracking-tight">
+            <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 dark:from-indigo-400 dark:via-violet-400 dark:to-fuchsia-400 bg-clip-text text-transparent">
+              Who to follow,
+            </span>{" "}
+            by topic
+          </h1>
+          <p className="text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto">
+            A free, community-editable directory of great YouTube, Instagram, Facebook,
+            X, and TikTok accounts — organized by subject, curated by admins.
+          </p>
+          <div className="mt-6 max-w-md mx-auto">
+            <SearchAutocomplete />
+          </div>
         </div>
-      </div>
 
-      <h2 className="font-semibold text-neutral-500 uppercase text-xs tracking-wide mb-3">
-        Browse topics
-      </h2>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {categories.map((category) => (
-          <CategoryCard
-            key={category.id}
-            slug={category.slug}
-            name={category.name}
-            description={category.description}
-            icon={category.icon}
-            count={category._count.people}
-          />
-        ))}
+        <h2 className="font-semibold text-neutral-500 uppercase text-xs tracking-wide mb-3">
+          Browse topics
+        </h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {categories.map((category, index) => (
+            <div
+              key={category.id}
+              className="animate-fade-in-up"
+              style={{ animationDelay: `${Math.min(index * 40, 320)}ms` }}
+            >
+              <CategoryCard
+                slug={category.slug}
+                name={category.name}
+                description={category.description}
+                icon={category.icon}
+                count={category._count.people}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

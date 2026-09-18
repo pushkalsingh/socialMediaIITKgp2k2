@@ -49,7 +49,7 @@ export default async function AccountPage({
               type="text"
               name="name"
               required
-              className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
             />
           </label>
           <label className="text-sm font-medium">
@@ -58,7 +58,7 @@ export default async function AccountPage({
               type="email"
               name="email"
               required
-              className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm"
             />
           </label>
           <label className="text-sm font-medium">
@@ -68,12 +68,12 @@ export default async function AccountPage({
               name="identificationNumber"
               required
               placeholder="e.g. 02ME3031"
-              className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 text-sm uppercase"
+              className="mt-1 w-full rounded-lg border border-neutral-300 dark:border-neutral-700 bg-transparent px-3 py-2 transition-shadow focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:focus:ring-indigo-500 text-sm uppercase"
             />
           </label>
           <button
             type="submit"
-            className="self-start rounded-lg border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-900"
+            className="self-start rounded-lg border border-neutral-300 dark:border-neutral-700 px-4 py-2 text-sm font-medium transition-all duration-150 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:border-neutral-400 active:scale-95"
           >
             Add admin
           </button>
