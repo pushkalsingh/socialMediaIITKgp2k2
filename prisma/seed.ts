@@ -12,6 +12,9 @@ type SeedPerson = {
   facebookUrl?: string;
   tiktokUrl?: string;
   websiteUrl?: string;
+  // Email of the contributor to attribute this entry to. Defaults to the
+  // category's addedByEmail, then to the super admin.
+  addedByEmail?: string;
 };
 
 type SeedCategory = {
@@ -20,6 +23,23 @@ type SeedCategory = {
   icon: string;
   description: string;
   people: SeedPerson[];
+  addedByEmail?: string;
+};
+
+// Contributors whose personal recommendations are attributed on the public
+// site (e.g. "Added by Nitesh"). These aren't real login accounts unless
+// someone later gives them a real email/ID number via the admin panel.
+const contributors = {
+  nitesh: {
+    email: "nitesh@example.com",
+    name: "Nitesh",
+    identificationNumber: "00NI0001",
+  },
+  arindam: {
+    email: "arindam.kushagra@example.com",
+    name: "Arindam Kushagra",
+    identificationNumber: "00AK0001",
+  },
 };
 
 // Links below are seeded from well-known, public handles as a starting point.
@@ -185,8 +205,25 @@ const categories: SeedCategory[] = [
     slug: "startups-entrepreneurship",
     icon: "🚀",
     description:
-      "Founders and operators sharing lessons on building companies, product, and early-stage growth. Add your own picks here.",
-    people: [],
+      "Founders and operators sharing lessons on building companies, product, and early-stage growth.",
+    people: [
+      {
+        name: "Elon Musk",
+        slug: "elon-musk",
+        bio: "Entrepreneur behind Tesla, SpaceX, and other ventures. Posts frequently on X about technology, business, and current events.",
+        xUrl: "https://x.com/elonmusk",
+        addedByEmail: contributors.arindam.email,
+      },
+      {
+        name: "Y Combinator",
+        slug: "y-combinator",
+        bio: "Influential startup accelerator. Its YouTube channel and Startup School content are widely followed for practical, founder-focused startup advice.",
+        websiteUrl: "https://www.ycombinator.com",
+        youtubeUrl: "https://www.youtube.com/@ycombinator",
+        xUrl: "https://x.com/ycombinator",
+        addedByEmail: contributors.arindam.email,
+      },
+    ],
   },
   {
     name: "Design & UX",
@@ -195,6 +232,226 @@ const categories: SeedCategory[] = [
     description:
       "Product designers and UX practitioners sharing design process, critique, and career advice. Add your own picks here.",
     people: [],
+  },
+  {
+    name: "Finance & Investing",
+    slug: "finance-investing",
+    icon: "💰",
+    description: "Investors and educators explaining valuation, markets, and financial decision-making.",
+    addedByEmail: contributors.nitesh.email,
+    people: [
+      {
+        name: "Aswath Damodaran",
+        slug: "aswath-damodaran",
+        bio: "NYU Stern finance professor known as \"the Dean of Valuation.\" Followed for company valuation frameworks, in the tradition of Graham and Dodd.",
+      },
+    ],
+  },
+  {
+    name: "Fitness & Strength Training",
+    slug: "fitness-strength-training",
+    icon: "💪",
+    description: "Coaches sharing practical, no-nonsense training, mobility, and strength wisdom.",
+    addedByEmail: contributors.nitesh.email,
+    people: [
+      {
+        name: "Kboges",
+        slug: "kboges",
+        bio: "Fitness coach and physical therapist sharing practical strength training and mobility advice.",
+        youtubeUrl: "https://www.youtube.com/@kboges",
+      },
+      {
+        name: "Dan John",
+        slug: "dan-john",
+        bio: "Veteran strength coach known for pragmatic, experience-tested kettlebell and barbell training wisdom.",
+      },
+    ],
+  },
+  {
+    name: "Food & Cooking",
+    slug: "food-cooking",
+    icon: "🍳",
+    description: "Chefs and food writers sharing recipes and the culture and science behind them.",
+    addedByEmail: contributors.nitesh.email,
+    people: [
+      {
+        name: "Krish Ashok",
+        slug: "krish-ashok",
+        bio: "Writer behind \"Masala Lab,\" exploring the science and culture of Indian cooking.",
+      },
+      {
+        name: "Ranveer Brar",
+        slug: "ranveer-brar",
+        bio: "Chef and TV personality sharing Indian recipes and food culture.",
+        youtubeUrl: "https://www.youtube.com/@RanveerBrar",
+      },
+    ],
+  },
+  {
+    name: "Mythology & Culture",
+    slug: "mythology-culture",
+    icon: "📜",
+    description: "Writers and storytellers exploring mythology and its modern parallels.",
+    addedByEmail: contributors.nitesh.email,
+    people: [
+      {
+        name: "Devdutt Pattanaik",
+        slug: "devdutt-pattanaik",
+        bio: "Mythologist and author who brings Indian mythology and its modern parallels to a wide audience — less a formal scholar than a source of thought-provoking perspective.",
+      },
+    ],
+  },
+  {
+    name: "Productivity & Focus",
+    slug: "productivity-focus",
+    icon: "🎯",
+    description: "Writers and researchers on attention, deep work, and avoiding digital distraction.",
+    addedByEmail: contributors.nitesh.email,
+    people: [
+      {
+        name: "Cal Newport",
+        slug: "cal-newport",
+        bio: "Computer science professor and author (Deep Work, Digital Minimalism) known for practical thinking on focus, attention, and dopamine detox.",
+        websiteUrl: "https://calnewport.com",
+      },
+    ],
+  },
+  {
+    name: "Mathematics",
+    slug: "mathematics",
+    icon: "➗",
+    description: "Channels making mathematics accessible and interesting to a general audience.",
+    addedByEmail: contributors.nitesh.email,
+    people: [
+      {
+        name: "Numberphile",
+        slug: "numberphile",
+        bio: "Brady Haran's channel exploring interesting mathematics, from number theory to puzzles, with academics and enthusiasts.",
+        youtubeUrl: "https://www.youtube.com/@numberphile",
+      },
+    ],
+  },
+  {
+    name: "Computer Science",
+    slug: "computer-science",
+    icon: "🖥️",
+    description: "Academic computer science content — courses, theory, and computing history.",
+    addedByEmail: contributors.nitesh.email,
+    people: [
+      {
+        name: "Computerphile",
+        slug: "computerphile",
+        bio: "Companion channel to Numberphile covering computer science topics, from algorithms to computing history.",
+        youtubeUrl: "https://www.youtube.com/@Computerphile",
+      },
+      {
+        name: "David J. Malan (CS50)",
+        slug: "david-j-malan-cs50",
+        bio: "Harvard professor behind CS50, one of the most popular introductory computer science courses, with lectures freely available on YouTube.",
+        youtubeUrl: "https://www.youtube.com/@cs50",
+      },
+    ],
+  },
+  {
+    name: "Science",
+    slug: "science",
+    icon: "🔬",
+    description: "Publications and channels covering research and ideas across the sciences.",
+    addedByEmail: contributors.nitesh.email,
+    people: [
+      {
+        name: "Veritasium",
+        slug: "veritasium",
+        bio: "Derek Muller's channel covering physics, engineering, and the science behind everyday phenomena.",
+        youtubeUrl: "https://www.youtube.com/@veritasium",
+        addedByEmail: contributors.nitesh.email,
+      },
+      {
+        name: "David Epstein",
+        slug: "david-epstein",
+        bio: "Science journalist and author of Range and The Sports Gene, writing on performance, generalism, and evidence-based thinking.",
+        addedByEmail: contributors.arindam.email,
+      },
+      {
+        name: "Quanta Magazine",
+        slug: "quanta-magazine",
+        bio: "Editorially independent publication covering developments in math, physics, biology, and computer science.",
+        websiteUrl: "https://www.quantamagazine.org",
+        addedByEmail: contributors.arindam.email,
+      },
+      {
+        name: "Nautil.us",
+        slug: "nautilus",
+        bio: "Science and philosophy publication known for long-form, narrative-style articles, in the vein of PBS-style general-audience science storytelling.",
+        websiteUrl: "https://nautil.us",
+        addedByEmail: contributors.arindam.email,
+      },
+      {
+        name: "Phys.org",
+        slug: "phys-org",
+        bio: "News aggregator covering the latest research across physics, science, and technology.",
+        websiteUrl: "https://phys.org",
+        addedByEmail: contributors.arindam.email,
+      },
+    ],
+  },
+  {
+    name: "Motorcycles",
+    slug: "motorcycles",
+    icon: "🏍️",
+    description: "Channels covering motorcycle reviews, culture, and history.",
+    addedByEmail: contributors.nitesh.email,
+    people: [
+      {
+        name: "FortNine",
+        slug: "fortnine",
+        bio: "Canadian motorcycle channel known for well-researched, entertaining reviews and motorcycle history and culture videos.",
+        youtubeUrl: "https://www.youtube.com/@FortNine",
+      },
+    ],
+  },
+  {
+    name: "Human Anatomy & Physiology",
+    slug: "human-anatomy-physiology",
+    icon: "🫀",
+    description: "Educational channels covering human anatomy and physiology.",
+    addedByEmail: contributors.nitesh.email,
+    people: [
+      {
+        name: "Institute of Human Anatomy",
+        slug: "institute-of-human-anatomy",
+        bio: "Known for hands-on anatomy lessons using real specimens. More recent videos lean toward explaining physiology via cadavers, which some viewers find harder to follow than the earlier anatomy-focused content.",
+        youtubeUrl: "https://www.youtube.com/@instituteofhumananatomy",
+      },
+    ],
+  },
+  {
+    name: "Philosophy & Big Ideas",
+    slug: "philosophy-big-ideas",
+    icon: "🧠",
+    description: "Writers and publications exploring philosophy, history, and big-picture ideas.",
+    addedByEmail: contributors.arindam.email,
+    people: [
+      {
+        name: "Yuval Noah Harari",
+        slug: "yuval-noah-harari",
+        bio: "Historian and author of Sapiens and Homo Deus, known for big-picture thinking on human history, technology, and the future.",
+        websiteUrl: "https://www.ynharari.com",
+      },
+      {
+        name: "Naval Ravikant",
+        slug: "naval-ravikant",
+        bio: "Entrepreneur and investor (AngelList) known for widely shared writing and podcasts on wealth, happiness, and decision-making.",
+        websiteUrl: "https://nav.al",
+        xUrl: "https://x.com/naval",
+      },
+      {
+        name: "Aeon.co",
+        slug: "aeon-co",
+        bio: "Publication of essays and ideas spanning philosophy, science, and culture.",
+        websiteUrl: "https://aeon.co",
+      },
+    ],
   },
 ];
 
@@ -223,7 +480,26 @@ async function main() {
 
   console.log(`Super admin ready: ${admin.email}`);
 
+  const adminsByEmail: Record<string, { id: string }> = { [adminEmail]: admin };
+  for (const contributor of Object.values(contributors)) {
+    const created = await prisma.admin.upsert({
+      where: { email: contributor.email },
+      update: {},
+      create: {
+        email: contributor.email,
+        name: contributor.name,
+        identificationNumber: contributor.identificationNumber,
+        status: "APPROVED",
+        isSuperAdmin: false,
+      },
+    });
+    adminsByEmail[contributor.email] = created;
+    console.log(`Contributor ready: ${created.name} <${created.email}>`);
+  }
+
   for (const category of categories) {
+    const categoryAdmin = adminsByEmail[category.addedByEmail ?? adminEmail] ?? admin;
+
     const createdCategory = await prisma.category.upsert({
       where: { slug: category.slug },
       update: {
@@ -236,10 +512,14 @@ async function main() {
         slug: category.slug,
         description: category.description,
         icon: category.icon,
+        addedById: categoryAdmin.id,
       },
     });
 
     for (const person of category.people) {
+      const personAdmin =
+        adminsByEmail[person.addedByEmail ?? category.addedByEmail ?? adminEmail] ?? admin;
+
       await prisma.person.upsert({
         where: { slug: person.slug },
         update: {
@@ -258,7 +538,7 @@ async function main() {
           slug: person.slug,
           bio: person.bio,
           categoryId: createdCategory.id,
-          addedById: admin.id,
+          addedById: personAdmin.id,
           youtubeUrl: person.youtubeUrl,
           xUrl: person.xUrl,
           instagramUrl: person.instagramUrl,
